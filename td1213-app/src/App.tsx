@@ -174,7 +174,7 @@ const App: React.FC = () => {
       <p>Estimated Tax Reduction: ${calculateTaxReduction().toFixed(2)}</p>
 
       <h2>Contribution Table</h2>
-      <table border="1" style={{ borderCollapse: 'collapse', width: '100%' }}>
+      <table border={1} style={{ borderCollapse: 'collapse', width: '100%' }}>
         <thead>
           <tr>
             <th>Year</th>
