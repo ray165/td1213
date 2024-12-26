@@ -1,5 +1,5 @@
 // Import required modules for React and TypeScript
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const provinces = [
   'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador',
@@ -21,7 +21,7 @@ const payIntervals = [
   { label: 'Monthly', multiplier: 12 }
 ];
 
-const App: React.FC = () => {
+const App = () => {
   const [province, setProvince] = useState(provinces[0]);
   const [annualIncome, setAnnualIncome] = useState<number>(0);
   const [rrspRoom, setRrspRoom] = useState<number>(0);
