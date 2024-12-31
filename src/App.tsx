@@ -1,6 +1,11 @@
 // Import required modules for React and TypeScript
 import { useState } from 'react';
 
+/**
+ * Alright, i want you to further improve the code. In the table, we want more columns. One column is "Taxes Adjusted By TD1213" this amount this is the estimated tax reduction for each year. We need another column that is the "Deffered Taxes With Growth". This column is the running total of the tax reduction for each year. But make sure you compound the past years by the rate of return. And compound the current year by the selected pay interval. 
+ * 
+ */
+
 const provinces = [
   'Alberta', 'British Columbia', 'Manitoba', 'New Brunswick', 'Newfoundland and Labrador',
   'Northwest Territories', 'Nova Scotia', 'Nunavut', 'Ontario', 'Prince Edward Island',
@@ -64,20 +69,29 @@ const App = () => {
     const rows = [];
 
     let runningBalance = 0;
+    let runningBalanceTaxBenefit = 0;
+    const taxBenefitPerInterval = calculateTaxReduction() / payInterval
 
     for (let year = 1; year <= yearsToWork; year++) {
       let totalContributed = 0;
       let contributionWithReturns = 0;
+      let taxBenefitWithReturns = 0;
 
       for (let i = 0; i < payInterval; i++) {
         const compoundedContribution = contributionsPerInterval * Math.pow(1 + intervalRate, payInterval - i - 1);
         contributionWithReturns += compoundedContribution;
+        const compoundedTaxContribution = taxBenefitPerInterval * Math.pow(1 + intervalRate, payInterval - i - 1);
+        taxBenefitWithReturns += compoundedTaxContribution;
         totalContributed += contributionsPerInterval;
       }
 
       let previousBalanceCompounded = runningBalance * (1 + rateOfReturn / 100)
       runningBalance = previousBalanceCompounded + contributionWithReturns;
-      rows.push({ year, totalContributed, contributionWithReturns, runningBalance });
+
+      let previousTaxBenefitCompounded = runningBalanceTaxBenefit * (1 + rateOfReturn / 100)
+      runningBalanceTaxBenefit = previousTaxBenefitCompounded + taxBenefitWithReturns
+
+      rows.push({ year, totalContributed, contributionWithReturns, runningBalance, runningBalanceTaxBenefit });
     }
 
     return rows;
@@ -181,6 +195,7 @@ const App = () => {
             <th>Total Contributed</th>
             <th>Contribution w/ Returns</th>
             <th>Balance</th>
+            <th>Balance Tax Benefit</th>
           </tr>
         </thead>
         <tbody>
@@ -190,6 +205,7 @@ const App = () => {
               <td>${row.totalContributed.toFixed(2)}</td>
               <td>${row.contributionWithReturns.toFixed(2)}</td>
               <td>${row.runningBalance.toFixed(2)}</td>
+              <td>${row.runningBalanceTaxBenefit.toFixed(2)}</td>
             </tr>
           ))}
         </tbody>
